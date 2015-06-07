@@ -1,0 +1,67 @@
+
+Ce répertoire contient un code à trous.  Les trous sont les suivants :
+
+caracas% grep FIXME *
+analyze.hh:    // FIXME: cut
+analyze.hh:    // FIXME: cut
+compute_dmap__v2.hh:	  // FIXME: cut
+compute_dmap__v2.hh:	      // FIXME: cut
+compute_dmap__v2.hh:  // FIXME: cut
+helper.hh:    // FIXME: cut
+image_if.hh:  // FIXME: cut
+
+
+
+Le fichier test_external_modification.cc vous montre comment on peut
+ajouter du comportement à un algorithme.  Vous avez besoin de cette
+technique pour que la routine compute_dmap__v2 sorte d'autres données
+que la carte de distance.
+
+Un exemple de cas d'utilisation est donné par test_compute_dmap__v2.cc.
+Lisez bien ce code.  Il explique ce que vous devez faire.  En résumé,
+avec le masque :
+
+   0 0 0 0 1 
+   1 1 1 1 0 
+   0 0 0 1 1 
+   1 1 1 0 1 
+
+et les étiquettes / graines :
+
+   0 0 0 0 0 
+   1 0 0 0 0 
+   0 0 0 0 0 
+   2 0 0 0 0 
+
+on veut obtenir cette carte de distances :
+
+           4294967295
+   0 1 2 3   
+         4 5 
+   0 1 2   6 
+
+mais aussi (en sorties auxiliaires) deux images.  La première donne
+les zones d'influence des graines :
+
+   0 0 0 0 0
+   1 1 1 1 0 
+   0 0 0 1 1 
+   2 2 2 0 1
+
+et la seconde la provenance (de proche en proche) de ces étiquettes :
+
+   (0,0) (0,1) (0,2) (0,3) (0,4) 
+   (1,0) (1,0) (1,1) (1,2) (1,4) 
+   (2,0) (2,1) (2,2) (1,3) (2,3) 
+   (3,0) (3,0) (3,1) (3,3) (2,4) 
+
+
+Au final, vous devez faire fonctionner (en remplissant les trous) le
+programme donné par le fichier  music_score_analysis.cc
+
+La procédure 'analyze' calcule, pour chaque étiquette, le chemin qui
+part d'une graine et qui va au point le plus distant de la graine et
+de même étiquette dans l'image de zones d'influence.
+
+Regardez bien les examples contenus dans  music_score_analysis.cc  et
+comprenez-les ; ils sont très explicites.
